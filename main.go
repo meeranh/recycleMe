@@ -41,9 +41,12 @@ func readFile(path string) string {
 // File path generation
 func getFilePath() string {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run main.go <file_path>")
+		fmt.Println("Usage: recycleMe <file_path>")
 		os.Exit(1)
 	}
+
+	// Just a welcome message :)
+	fmt.Println("Loading :D")
 
 	// Crafting the absolute file path
 	absolutePath, err := filepath.Abs(os.Args[1])
@@ -196,8 +199,6 @@ func sendSegments(segments []string) ([]string, float64) {
 }
 
 func main() {
-	fmt.Println("Loading :D")
-
 	// Preparing a duplicated file for editing
 	path := getFilePath()
 	fileContent := readFile(path)
