@@ -8,8 +8,9 @@ https://github.com/meeranh/recycleMe/assets/102342274/d27de97a-3f8b-4227-8155-a3
 # Binary Installation
 + **Windows**: 
     + **Step 1**: Download the pre-built binaries from [here](https://github.com/meeranh/recycleMe/releases/download/v0.1/recycleMe-x86_64_windows.exe).
-    + **Step 2**: Add binary to your PATH environment variable.
-    + **Step 3**: Run `recycleMe-x86_64_windows.exe yourPlainTextFile.md` from the command line.
+    + **Step 2**: Rename it to `recycleMe.exe`
+    + **Step 3**: Add binary to your PATH environment variable.
+    + **Step 4**: Run `recycleMe yourPlainTextFile.md` from the command line.
 
 + **Linux**: 
     + **Step 1**: Download the pre-built binaries from [here](https://github.com/meeranh/recycleMe/releases/download/v0.1/recycleMe-x86_64_linux)
