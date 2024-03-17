@@ -1,3 +1,10 @@
+# Demonstration
+
+
+https://github.com/meeranh/recycleMe/assets/102342274/d27de97a-3f8b-4227-8155-a3b765c0a02e
+
+
+
 # Binary Installation
 + **Windows**: 
     + **Step 1**: Download the pre-built binaries from [here](https://github.com/meeranh/recycleMe/releases/download/v0.1/recycleMe-x86_64_windows.exe).
