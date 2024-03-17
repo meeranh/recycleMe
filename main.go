@@ -12,6 +12,10 @@ import (
 	"github.com/fatih/color"
 )
 
+// Program constants
+const BaseURL = "https://api.zerogpt.com/api/detect/detectText"
+const MaxAllowedCharacters = 10000
+
 // To process the response from GptZero
 type Response struct {
 	Data struct {
@@ -50,7 +54,6 @@ func getFilePath() string {
 
 // This is were the HTTP request is crafted
 func makeRequest(fileContent string) []byte {
-	const BaseURL = "https://api.zerogpt.com/api/detect/detectText"
 
 	// Headers
 	const UserAgent = "Mozilla/5.0 (X11; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0"
@@ -158,8 +161,42 @@ func startHumanization(arrToHumanize []string, newFilePath string) {
 	}
 }
 
+// Checks if the text needs to be segmented
+func isTooBig(fileContent string) bool {
+	return len(fileContent) > MaxAllowedCharacters
+}
+
+// Segments the text into allowable chunks
+func segmentText(fileContent string) []string {
+	var segments []string
+	segment := ""
+	for _, char := range fileContent {
+		segment += string(char)
+		if len(segment) > MaxAllowedCharacters {
+			segments = append(segments, segment)
+			segment = ""
+		}
+	}
+	segments = append(segments, segment)
+	return segments
+}
+
+// Send the segmented text to ZeroGPT
+func sendSegments(segments []string) ([]string, float64) {
+	toHumanizeSlice := make([]string, 0)
+	avgAiPercentage := 0.0
+	for i, segment := range segments {
+		fmt.Printf("[%d/%d] Sending current segment\n", i+1, len(segments))
+		rawJson := makeRequest(segment)
+		stringsToHumanize, aiPercentage := extractContentDetails(rawJson)
+		toHumanizeSlice = append(toHumanizeSlice, stringsToHumanize...)
+		avgAiPercentage += aiPercentage / float64(len(segments))
+	}
+	return toHumanizeSlice, avgAiPercentage
+}
+
 func main() {
-	fmt.Println("▣ Loading :D")
+	fmt.Println("Loading :D")
 
 	// Preparing a duplicated file for editing
 	path := getFilePath()
@@ -168,7 +205,19 @@ func main() {
 
 	// Sending the request to ZeroGPT
 	rawJson := makeRequest(fileContent)
-	stringsToHumanize, aiPercentage := extractContentDetails(rawJson)
+
+	// Initialize slice & float for the humanization process
+	stringsToHumanize := make([]string, 0)
+	aiPercentage := 0.0
+
+	// Check if file needs segmentation
+	if isTooBig(fileContent) {
+		fmt.Printf("Uh oh! The file is too big. We need to segment it.\n\n")
+		segments := segmentText(fileContent)
+		stringsToHumanize, aiPercentage = sendSegments(segments)
+	} else {
+		stringsToHumanize, aiPercentage = extractContentDetails(rawJson)
+	}
 
 	// Printing out the flagged AI percentage
 	red := color.New(color.FgRed).SprintFunc()
