@@ -148,6 +148,7 @@ func startHumanization(arrToHumanize []string, newFilePath string) {
 	green := color.New(color.FgGreen)
 
 	fmt.Printf("Rewrite these sentences in your own words\n")
+	fmt.Printf("Note: Try not to use special characters/symbols so the shell doesn't get confused :)\n")
 
 	for i, v := range arrToHumanize {
 
@@ -157,7 +158,7 @@ func startHumanization(arrToHumanize []string, newFilePath string) {
 
 		// Taking in user input from stdin
 		var userInput string
-		fmt.Scanln(&userInput)
+		fmt.Scanf("%q", &userInput)
 
 		// Editing the duplicated file
 		replaceString(userInput, v, newFilePath)
