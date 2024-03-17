@@ -107,11 +107,11 @@ func createDuplicateFile(originalFilePath string, fileContent string) string {
 
 	// Extract file data
 	originalFileName := filepath.Base(originalFilePath)
-	originalFileExtension := filepath.Ext(originalFilePath)
-	originalFileNameWithoutExtension := strings.TrimSuffix(originalFileName, originalFileExtension)
+	fileExtension := filepath.Ext(originalFilePath)
+	fileName := strings.TrimSuffix(originalFileName, fileExtension)
 
 	// Create a new duplicate file in the current working directory
-	newFileName := originalFileNameWithoutExtension + "_humanized" + originalFileExtension
+	newFileName := fileName + "_humanized" + fileExtension
 	currentWorkingDirectory, _ := os.Getwd()
 	newFilePath := filepath.Join(currentWorkingDirectory, newFileName)
 	newFile, err := os.Create(newFilePath)
@@ -159,7 +159,7 @@ func startHumanization(arrToHumanize []string, newFilePath string) {
 }
 
 func main() {
-	fmt.Println("Loading :D")
+	fmt.Println("▣ Loading :D")
 
 	// Preparing a duplicated file for editing
 	path := getFilePath()
