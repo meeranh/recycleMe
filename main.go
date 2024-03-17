@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"github.com/fatih/color"
+	"bufio"
 )
 
 // Program constants
@@ -148,7 +149,8 @@ func startHumanization(arrToHumanize []string, newFilePath string) {
 	green := color.New(color.FgGreen)
 
 	fmt.Printf("Rewrite these sentences in your own words\n")
-	fmt.Printf("Note: Try not to use special characters/symbols so the shell doesn't get confused :)\n")
+
+	scanner := bufio.NewScanner(os.Stdin)
 
 	for i, v := range arrToHumanize {
 
@@ -158,7 +160,8 @@ func startHumanization(arrToHumanize []string, newFilePath string) {
 
 		// Taking in user input from stdin
 		var userInput string
-		fmt.Scanf("%q", &userInput)
+		scanner.Scan()
+		userInput = scanner.Text()
 
 		// Editing the duplicated file
 		replaceString(userInput, v, newFilePath)
