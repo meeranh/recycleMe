@@ -227,7 +227,7 @@ func main() {
 
 	// Printing out the flagged AI percentage
 	red := color.New(color.FgRed).SprintFunc()
-	fmt.Printf("\nAI Percentage (%%): %s\n", red(aiPercentage))
+	fmt.Printf("\nAI Percentage (%%): %s\n", red(int(aiPercentage)))
 
 	// Starting the editing iteration
 	startHumanization(stringsToHumanize, newFilePath)
