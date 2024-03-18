@@ -73,9 +73,10 @@ func makeRequest(fileContent string) []byte {
 	const SecFetchSite = "same-site"
 
 	// Prepare the post body
-	postBody, _ := json.Marshal(map[string]string {
+	postBody, err := json.Marshal(map[string]string {
 		"input_text": fileContent,
 		})
+	check(err)
 
 	// Create a new request
 	req, err := http.NewRequest("POST", BaseURL, bytes.NewBuffer(postBody))
@@ -98,7 +99,8 @@ func makeRequest(fileContent string) []byte {
 	check(err)
 	defer resp.Body.Close()
 
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	check(err)
 	return body
 }
 
@@ -119,7 +121,8 @@ func createDuplicateFile(originalFilePath string, fileContent string) string {
 
 	// Create a new duplicate file in the current working directory
 	newFileName := fileName + "_humanized" + fileExtension
-	currentWorkingDirectory, _ := os.Getwd()
+	currentWorkingDirectory, err := os.Getwd()
+	check(err)
 	newFilePath := filepath.Join(currentWorkingDirectory, newFileName)
 	newFile, err := os.Create(newFilePath)
 	check(err)
@@ -208,9 +211,6 @@ func main() {
 	fileContent := readFile(path)
 	newFilePath := createDuplicateFile(path, fileContent)
 
-	// Sending the request to ZeroGPT
-	rawJson := makeRequest(fileContent)
-
 	// Initialize slice & float for the humanization process
 	stringsToHumanize := make([]string, 0)
 	aiPercentage := 0.0
@@ -221,6 +221,7 @@ func main() {
 		segments := segmentText(fileContent)
 		stringsToHumanize, aiPercentage = sendSegments(segments)
 	} else {
+		rawJson := makeRequest(fileContent)
 		stringsToHumanize, aiPercentage = extractContentDetails(rawJson)
 	}
 
